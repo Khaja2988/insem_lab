@@ -1,4 +1,4 @@
-name: Deploy to GitHub Pages
+name: Deploy Hospital Frontend to GitHub Pages
 
 on:
   push:
@@ -27,25 +27,25 @@ jobs:
       with:
         node-version: '18'
         cache: 'npm'
-        cache-dependency-path: hospital-frontend-main/package-lock.json
     
     - name: Setup Pages
       uses: actions/configure-pages@v4
     
     - name: Install dependencies
-      run: |
-        cd hospital-frontend-main
-        npm ci
+      run: npm ci
+    
+    - name: Run linting
+      run: npm run lint
     
     - name: Build with Vite
-      run: |
-        cd hospital-frontend-main
-        npm run build
+      run: npm run build
+      env:
+        VITE_API_URL: ${{ secrets.VITE_API_URL || 'http://localhost:8081' }}
     
     - name: Upload artifact
       uses: actions/upload-pages-artifact@v3
       with:
-        path: hospital-frontend-main/dist
+        path: ./dist
 
   deploy:
     environment:
